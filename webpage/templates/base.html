@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VacuNacion</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="{% static "webpage/materialize/css/materialize.min.css" %}"
+          media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <meta name="theme-color" content="#009688">
+</head>
+
+<body class="teal">
+<nav class="white">
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo center black-text"></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger black-text"><i class="material-icons black-text">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            {% if user.is_authenticated %}
+                <li><a class="black-text" href="#">Welcome: @{{ user.username }}</a></li>
+            {% endif %}
+            <li>
+                <a class="dropdown-trigger black-text" href="#" data-target="account-dropdown">Account<i
+                        class="material-icons black-text right">arrow_drop_down</i></a>
+                <ul id="account-dropdown" class="dropdown-content">
+                    <li><a class="black-text" href="{% url "accounts:signup_user" %}">Registrarse como usuario</a></li>
+                    <li><a class="black-text" href="{% url "accounts:signup_medic" %}">Registrarse como medico</a></li>
+                    <li><a class="black-text" href="{% url "accounts:login_account" %}">Iniciar sesion</a></li>
+                    <li><a class="black-text" href="{% url "accounts:logout_account" %}">Cerrar sesion</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li><a class="black-text" href="{% url "admin:index" %}">Admin</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="{% url "accounts:signup_user" %}">Registrarse como usuario</a></li>
+    <li><a href="{% url "accounts:signup_medic" %}">Registrarse como medico</a></li>
+    <li><a href="{% url "accounts:login_account" %}">Iniciar sesion</a></li>
+    <li><a href="{% url "accounts:logout_account" %}">Cerrar sesion</a></li>
+</ul>
+
+{% block body %}
+
+{% endblock %}
+
+<!--JavaScript at end of body for optimized loading-->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="{% static "webpage/materialize/js/materialize.min.js" %}"></script>
+<script>
+    $('.sidenav').sidenav();
+    $('.dropdown-trigger').dropdown();
+    $('.fixed-action-btn').floatingActionButton();
+</script>
+</body>
+</html>
