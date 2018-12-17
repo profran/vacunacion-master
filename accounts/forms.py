@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, CarnetOwner
+from .models import User
 
 
 class SignUpForm(UserCreationForm):
@@ -28,9 +28,3 @@ class SignUpMedicForm(SignUpForm):
         model = User
         fields = ('username', 'dni', 'plate', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
-
-class CreateOwnerForm(forms.ModelForm):
-
-    class Meta:
-        model = CarnetOwner
-        fields = ('dni', 'name', 'last_name', 'born_date',)

@@ -25,5 +25,6 @@ from webpage import urls as webpage
 urlpatterns = [
     path('', include(webpage)),
     path('admin/', admin.site.urls),
-    path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts'))
+    path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
+    path('vacunacion/', include(('vacunacion.urls', 'vacunacion'), namespace='vacunacion'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

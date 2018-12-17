@@ -15,16 +15,3 @@ class User(AbstractUser):
 class MedicProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     plate = models.CharField(max_length=8, null=False, blank=False, unique=True)
-
-
-class CarnetOwner(models.Model):
-    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='childs')
-    name = models.CharField(max_length=15, null=False, blank=False)
-    last_name = models.CharField(max_length=15, null=False, blank=False)
-    dni = models.CharField(max_length=9, null=True, blank=False)
-    born_date = models.DateField(null=True)
-
-
-@receiver(post_save, sender=User)
-def create_carnet_owner(sender, instance, **kwargs):
-    carnet_owner = CarnetOwner.objects.get_or_create(user=instance, dni=instance.dni, name=instance.first_name, last_name=instance.last_name)
