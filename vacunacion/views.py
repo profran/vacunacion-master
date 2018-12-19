@@ -56,3 +56,18 @@ def add_vaccination(request, query):
         return render(request, 'accounts/form.html', {'title': 'Añadir vacuna', 'form': form})
     else:
         return redirect('/')
+
+def carnet_detail(request, carnet_id):
+    if (request.user.is_authenticated):
+        if (request.user.is_medic):
+            try:
+                carnet = Carnet.objects.get(id=carnet_id)
+                return render(request, 'webpage/carnet_detail.html', {'carnet': carnet})
+            except:
+                return redirect('/')
+        else:
+            try:
+                carnet = Carnet.objects.get(user=request.user, id=carnet_id)
+                return render(request, 'webpage/carnet_detail.html', {'carnet': carnet})
+            except:
+                return redirect('/')

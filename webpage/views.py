@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from vacunacion.models import Dose
+from vacunacion.models import Carnet
 
 
 # Create your views here.

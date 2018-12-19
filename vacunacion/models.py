@@ -27,7 +27,7 @@ class Carnet(models.Model):
 
 class Vaccination(models.Model):
     carnet = models.ForeignKey(Carnet, on_delete=models.CASCADE, related_name='vaccinations')
-    vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
+    vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE, related_name='vaccine')
 
 
 class Dose(models.Model):

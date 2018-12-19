@@ -22,7 +22,7 @@
         <a href="#" data-target="mobile-demo" class="sidenav-trigger black-text"><i class="material-icons black-text">menu</i></a>
         <ul class="right hide-on-med-and-down">
             {% if user.is_authenticated %}
-                <li><a class="black-text" href="#">Welcome: @{{ user.username }}</a></li>
+                <li><a class="black-text" href="#">Bienvenido: {{ user.first_name }}, {{ user.last_name }}</a></li>
             {% endif %}
             <li>
                 <a class="dropdown-trigger black-text" href="#" data-target="account-dropdown">Account<i
