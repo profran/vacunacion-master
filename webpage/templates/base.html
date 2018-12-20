@@ -18,8 +18,10 @@
 <body class="teal">
 <nav class="white">
     <div class="nav-wrapper">
-        <a href="/" class="brand-logo center black-text"></a>
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger black-text"><i class="material-icons black-text">menu</i></a>
+        <a href="/" class="brand-logo center black-text"><img src='{% static 'webpage/logo.svg' %}'
+                                                              style="height: 32px"/></a>
+        <a href="#" data-target="slide-out" class="sidenav-trigger black-text"><i
+                class="material-icons black-text">menu</i></a>
         <ul class="right hide-on-med-and-down">
             {% if user.is_authenticated %}
                 <li><a class="black-text" href="#">Bienvenido: {{ user.first_name }}, {{ user.last_name }}</a></li>
@@ -39,9 +41,33 @@
         </ul>
     </div>
 </nav>
-<ul class="sidenav" id="mobile-demo">
+<ul id="slide-out" class="sidenav">
+    {% if user.is_authenticated %}
+        <li>
+            <div class="user-view">
+                <div class="background teal"></div>
+                <a href="#"><img class="circle" src="{% static 'webpage/logo.svg' %}"></a>
+                <a href="#"><span class="white-text name">{{ user.first_name }}, {{ user.last_name }}</span></a>
+                <a href="#"><span class="white-text email">{{ user.email }}</span></a>
+            </div>
+        </li>
+        {% if not user.is_medic %}
+            <li><a href="/">Mis carnets</a></li>
+            <li>
+                <div class="divider"></div>
+            </li>
+        {% else %}
+            <li><a href="/">Panel de control</a></li>
+            <li>
+                <div class="divider"></div>
+            </li>
+        {% endif %}
+    {% endif %}
     <li><a href="{% url "accounts:signup_user" %}">Registrarse como usuario</a></li>
     <li><a href="{% url "accounts:signup_medic" %}">Registrarse como medico</a></li>
+    <li>
+        <div class="divider"></div>
+    </li>
     <li><a href="{% url "accounts:login_account" %}">Iniciar sesion</a></li>
     <li><a href="{% url "accounts:logout_account" %}">Cerrar sesion</a></li>
 </ul>

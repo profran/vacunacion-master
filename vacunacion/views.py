@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import VaccinationAddForm
 from .models import Carnet, Vaccine, Vaccination, Dose
-from .forms import CreateCarnetForm
+from .forms import CreateCarnetForm, GetCarnetForm
 from django.db.models import Q
 
 
@@ -37,17 +37,21 @@ def get_dni(request):
 def add_vaccination(request, query):
     if (request.user.is_medic):
         if request.method == 'POST':
-            print(request.POST)
-            carnet = Carnet.objects.get(id=request.POST.get('carnet'))
-            vaccine = Vaccine.objects.get(id=request.POST.get('vaccine'))
-            vaccination = Vaccination.objects.get_or_create(carnet=carnet, vaccine=vaccine)[0]
-            date = request.POST.get('date_year') + '-' + request.POST.get('date_month') + '-' + request.POST.get('date_day')
-            next_dose_date = request.POST.get('next_dose_year') + '-' + request.POST.get(
-                'next_dose_month') + '-' + request.POST.get('next_dose_day')
-            dose = Dose(vaccination=vaccination, type=request.POST.get('type'), medic=request.user,
-                        date=date, next_dose=next_dose_date, batch_number=request.POST.get('batch_number'))
-            dose.save()
-            return redirect('/')
+            carnet = Carnet.objects.prefetch_related('user').get(id=request.POST.get('carnet'))
+            if (carnet.user.token.token == request.POST.get('token') and carnet.user.token.attemps <= 5):
+                vaccine = Vaccine.objects.get(id=request.POST.get('vaccine'))
+                vaccination = Vaccination.objects.get_or_create(carnet=carnet, vaccine=vaccine)[0]
+                date = request.POST.get('date_year') + '-' + request.POST.get('date_month') + '-' + request.POST.get('date_day')
+                next_dose_date = request.POST.get('next_dose_year') + '-' + request.POST.get(
+                    'next_dose_month') + '-' + request.POST.get('next_dose_day')
+                dose = Dose(vaccination=vaccination, type=request.POST.get('type'), medic=request.user,
+                            date=date, next_dose=next_dose_date, batch_number=request.POST.get('batch_number'))
+                dose.save()
+                return redirect('/')
+            else:
+                carnet.user.token.attemps += 1
+                carnet.user.token.save()
+                return redirect('/')
         else:
             queryset = Carnet.objects.prefetch_related('user').filter(
                 Q(user__dni=query) | Q(user__username=query))
@@ -71,3 +75,20 @@ def carnet_detail(request, carnet_id):
                 return render(request, 'webpage/carnet_detail.html', {'carnet': carnet})
             except:
                 return redirect('/')
+
+def get_carnet(request):
+    if (request.user.is_authenticated):
+        if (request.user.is_medic):
+            if request.method == 'POST':
+                form = GetCarnetForm(data=request.POST)
+                if (form.is_valid()):
+                    return redirect('/vacunacion/carnet/add/' + request.POST.get('dni'))
+                else:
+                    return render(request, 'accounts/form.html', {'title': 'Añadir vacuna', 'form': form})
+            else:
+                form = GetCarnetForm()
+                return render(request, 'accounts/form.html', {'title': 'Añadir vacuna', 'form': form})
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')

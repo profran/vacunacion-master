@@ -32,14 +32,13 @@ class Vaccination(models.Model):
 
 class Dose(models.Model):
     TYPE_CHOICES = {
-        ('1', 'First'),
-        ('2', 'Second'),
-        ('3', 'Third'),
-        ('4', 'Fourth'),
-        ('5', 'Fifth'),
-        ('r', 'Reinforcement'),
-        ('o', 'Opcional'),
-        ('u', 'Unique')
+        ('1', 'Primera dosis'),
+        ('2', 'Segunda dosis'),
+        ('3', 'Tercer dosis'),
+        ('4', 'Cuarta dosis'),
+        ('5', 'Quinta dosis'),
+        ('r', 'Refuerzo'),
+        ('u', 'Unica')
 
     }
 

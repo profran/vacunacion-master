@@ -1,5 +1,7 @@
 from django import forms
+from accounts.models import User
 from .models import Vaccination, Vaccine, Dose, Carnet
+from django.db.models import Q
 
 
 class VaccinationAddForm(forms.Form):
@@ -15,13 +17,34 @@ class VaccinationAddForm(forms.Form):
     date = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), required=True, help_text='Required. Format: YYYY-MM-DD')
     next_dose = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), help_text='Optional. Format: YYYY-MM-DD')
     batch_number = forms.CharField(max_length=15, required=True)
-    verification_code = forms.CharField(max_length=6, required=True, help_text='No "-" or "/"')
+    token = forms.CharField(max_length=6, required=True, help_text='No "-" or "/"')
 
     class Meta:
-        fields = ('vaccine', 'type', 'batch_number', 'date', 'next_dose', 'verification_code',)
+        fields = ('vaccine', 'type', 'batch_number', 'date', 'next_dose', 'token',)
 
 class CreateCarnetForm(forms.ModelForm):
+
+    dni = forms.CharField(max_length=15, required=False)
 
     class Meta:
         model = Carnet
         fields = ('dni', 'name', 'last_name', 'born_date',)
+
+class GetCarnetForm(forms.Form):
+    dni = forms.CharField(max_length=15, required=True, help_text='Obligatorio. Nombre de usuario o DNI')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        dni = cleaned_data.get('dni')
+
+        try:
+            User.objects.get(Q(dni=dni) | Q(username=dni))
+        except:
+            self._errors["dni"] = self.error_class(['Usuario con este dni o nombre de usuario no fue encontrado.'])
+
+            del cleaned_data["dni"]
+
+        return cleaned_data
+
+    class Meta:
+        fields = ('dni')
