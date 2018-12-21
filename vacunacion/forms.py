@@ -2,6 +2,7 @@ from django import forms
 from accounts.models import User
 from .models import Vaccination, Vaccine, Dose, Carnet
 from django.db.models import Q
+import datetime
 
 
 class VaccinationAddForm(forms.Form):
@@ -14,8 +15,8 @@ class VaccinationAddForm(forms.Form):
 
     vaccine = forms.ModelChoiceField(queryset=Vaccine.objects.all(), required=True)
     type = forms.ChoiceField(choices=Dose.TYPE_CHOICES, required=True)
-    date = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), required=True, help_text='Required. Format: YYYY-MM-DD')
-    next_dose = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), help_text='Optional. Format: YYYY-MM-DD')
+    date = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), initial=datetime.date.today(), required=True, help_text='Required. Format: YYYY-MM-DD')
+    next_dose = forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2050)), initial=datetime.date.today(), help_text='Optional. Format: YYYY-MM-DD')
     batch_number = forms.CharField(max_length=15, required=True)
     token = forms.CharField(max_length=6, required=True, help_text='No "-" or "/"')
 

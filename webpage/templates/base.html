@@ -27,11 +27,19 @@
                 <li><a class="black-text" href="#">Bienvenido: {{ user.first_name }}, {{ user.last_name }}</a></li>
             {% endif %}
             <li>
-                <a class="dropdown-trigger black-text" href="#" data-target="account-dropdown">Account<i
+                <a class="dropdown-trigger black-text" href="#" data-target="account-dropdown">Opciones<i
                         class="material-icons black-text right">arrow_drop_down</i></a>
-                <ul id="account-dropdown" class="dropdown-content">
+                <ul id="account-dropdown" class="dropdown-content black-text">
+                    {% if not user.is_medic %}
+                        <li><a href="/">Mis carnets</a></li>
+                        <li class="divider" tabindex="-1"></li>
+                    {% else %}
+                        <li><a href="/">Panel de control</a></li>
+                        <li class="divider" tabindex="-1"></li>
+                    {% endif %}
                     <li><a class="black-text" href="{% url "accounts:signup_user" %}">Registrarse como usuario</a></li>
                     <li><a class="black-text" href="{% url "accounts:signup_medic" %}">Registrarse como medico</a></li>
+                    <div class="divider"></div>
                     <li><a class="black-text" href="{% url "accounts:login_account" %}">Iniciar sesion</a></li>
                     <li><a class="black-text" href="{% url "accounts:logout_account" %}">Cerrar sesion</a></li>
                     <li class="divider" tabindex="-1"></li>
